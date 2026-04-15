@@ -1,73 +1,102 @@
-# React + TypeScript + Vite
+# Document Processing UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![React](https://img.shields.io/badge/React-19-blue?logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-6-purple?logo=vite)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss)](https://tailwindcss.com)
 
-Currently, two official plugins are available:
+A React + TypeScript frontend for the [Document Processing API](https://github.com/juhagh/document-processing-api).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Allows users to submit document analysis jobs, track job status in real time, and view analysis results.
 
-## React Compiler
+![Screenshot](docs/document-processing-ui.png)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- Submit document text for asynchronous analysis
+- Browse all jobs ordered by submission time
+- Look up any job by ID
+- Real-time status polling for active jobs
+- Analysis result display including word count, character count, line count, and summary
+- Status badges with colour coding per job state
+- Responsive two-column layout
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- Axios
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Related Repository
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- [Document Processing API](https://github.com/juhagh/document-processing-api) — ASP.NET Core backend with RabbitMQ worker and PostgreSQL persistence
+
+## Prerequisites
+
+- Node.js 20+ (via [NVM](https://github.com/nvm-sh/nvm) recommended)
+- [Document Processing API](https://github.com/juhagh/document-processing-api) running locally
+
+## Getting Started
+
+**1. Clone the repository**
+
+```bash
+git clone https://github.com/juhagh/document-processing-ui.git
+cd document-processing-ui
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**2. Install dependencies**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+**3. Start the development server**
+
+```bash
+npm run dev
+```
+
+The UI will be available at `http://localhost:5173`.
+
+> The API is expected to be running at `http://localhost:5031`. 
+> The Vite dev server proxies all `/api` requests to the API automatically.
+
+## Project Structure
+
+```text
+src/
+  api/          # Axios API client
+  components/   # React components
+  types/        # TypeScript type definitions
+  App.tsx       # Root component and application state
+  main.tsx      # Entry point
+```
+
+## Component Overview
+
+- **SubmitJobForm** — text input and submission handling with loading and error states
+- **GetJobById** — look up a specific job by ID
+- **JobList** — scrollable list of all jobs with selection highlighting
+- **JobDetail** — full job detail view with analysis results and active job polling
+- **StatusBadge** — colour coded status indicator reused across components
+
+## How It Works
+
+1. User submits document text via the form
+2. UI posts to `POST /api/jobs` and adds the new job to the list
+3. If the job is in `Queued` or `Processing` state, the UI polls `GET /api/jobs/{id}` every 3 seconds
+4. Once the job reaches `Completed` or `Failed`, polling stops and results are displayed
+
+## Planned Improvements
+
+- Pagination for job list
+- Filter jobs by status
+- Toast notifications for job completion
+- Environment variable configuration for API base URL
+
+## License
+
+MIT
