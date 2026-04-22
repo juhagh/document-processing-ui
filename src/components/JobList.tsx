@@ -3,7 +3,7 @@ import StatusBadge from './StatusBadge';
 
 interface Props {
     jobs: Job[];
-    selectedJobId: number | null;
+    selectedJobId: string | null;
     onSelect: (job: Job) => void;
 }
 
@@ -31,7 +31,7 @@ export default function JobList({ jobs, selectedJobId, onSelect }: Props) {
                     }`}
                 >
                     <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-800">Job #{job.id}</span>
+                        <span className="text-sm font-medium text-gray-800">Job: {job.id}</span>
                         <StatusBadge status={job.status} />
                     </div>
                     <p className="text-xs text-gray-500 mt-1">{formatDate(job.submittedAtUtc)}</p>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { getJobById } from '../api/jobsApi';
 import type { Job } from '../types/job';
 import JobDetail from './JobDetail';
+import { validate as uuidValidate } from 'uuid';
 
 export default function GetJobById() {
     const [jobId, setJobId] = useState('');
@@ -10,8 +11,8 @@ export default function GetJobById() {
     const [error, setError] = useState<string | null>(null);
 
     const handleSearch = async () => {
-        const id = parseInt(jobId);
-        if (isNaN(id)) {
+            const id = jobId;
+        if (!uuidValidate(id)) {
             setError('Please enter a valid job ID.');
             return;
         }
@@ -24,7 +25,7 @@ export default function GetJobById() {
             const result = await getJobById(id);
             setJob(result);
         } catch {
-            setError(`Job #${id} was not found.`);
+            setError(`Job ${id} was not found.`);
         } finally {
             setLoading(false);
         }
@@ -39,9 +40,9 @@ export default function GetJobById() {
             <h2 className="text-lg font-semibold text-gray-800 mb-3">Find Job by ID</h2>
             <div className="flex gap-2">
                 <input
-                    type="number"
+                    type="string"
                     className="border border-gray-300 rounded-md p-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40"
-                    placeholder="Job ID..."
+                    placeholder="Job GUID..."
                     value={jobId}
                     onChange={e => setJobId(e.target.value)}
                     onKeyDown={handleKeyDown}

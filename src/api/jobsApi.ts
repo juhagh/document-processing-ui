@@ -8,7 +8,7 @@ const api = axios.create({
 export const getJobs = (): Promise<Job[]> =>
     api.get<Job[]>('/jobs').then(r => r.data);
 
-export const getJobById = (id: number): Promise<Job> =>
+export const getJobById = (id: string): Promise<Job> =>
     api.get<Job>(`/jobs/${id}`).then(r => r.data);
 
 export const createJob = (inputText: string): Promise<Job> =>

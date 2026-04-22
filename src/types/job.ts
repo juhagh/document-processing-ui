@@ -6,7 +6,7 @@ export type JobStatus =
     | 'Failed';
 
 export interface Job {
-    id: number;
+    id: string;
     status: JobStatus;
     inputText: string;
     submittedAtUtc: string;
