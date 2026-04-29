@@ -61,7 +61,7 @@ npm run dev
 
 The UI will be available at `http://localhost:5173`.
 
-> The API is expected to be running at `http://localhost:5031`. 
+> The API is expected to be running at `http://localhost:8080`. 
 > The Vite dev server proxies all `/api` requests to the API automatically.
 
 ## Project Structure
